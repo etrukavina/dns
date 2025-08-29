@@ -11,7 +11,16 @@ Built with simplicity and performance in mind, this API is ideal for developers 
 - **Developer-Friendly**: Clear documentation, JSON responses, and open-source codebase.
 - **MIT Licensed**: Freely use, modify, and distribute under the MIT License.
 
-## Getting Started
+## Usage
+```bash
+# Query A records for a domain
+curl https://dns.etrukavina.com/v1/A/example.com
+
+# Perform a reverse DNS lookup for an IP address
+curl https://dns.etrukavina.com/v1/reverse/8.8.8.8
+```
+
+## Develop & Contribute
 
 ### Prerequisites
 - **Node.js**: Version 14.x or higher.
@@ -37,15 +46,6 @@ npm start
 npm run dev
 ```
 The API will be available at ```http://localhost:3000``` (or your configured port).
-
-## Usage
-```bash
-# Query A records for a domain
-curl http://dns.etrukavina.com/v1/A/example.com
-
-# Perform a reverse DNS lookup for an IP address
-curl http://dns.etrukavina.com/v1/reverse/8.8.8.8
-```
 
 ## Endpoints
 ### Health Check
