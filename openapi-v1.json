@@ -1,0 +1,414 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "E.T.Rukavina DNS",
+    "description": "A REST API for performing DNS lookups and reverse lookups.",
+    "version": "1.0.0",
+    "termsOfService": "https://etrukavina.com/dns/terms",
+    "contact": {
+      "name": "Emanuel Tin Rukavina (Owner)",
+      "email": "contact@etrukavina.com"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://etrukavina.com/dns/license"
+    }
+  },
+  "tags": [
+    {
+      "name": "DNS",
+      "description": "Endpoints for standard DNS record lookups (A, AAAA, MX, TXT, etc.) for any domain."
+    },
+    {
+      "name": "Reverse",
+      "description": "Endpoints for performing reverse DNS lookups to find hostnames associated with IP addresses."
+    },
+    {
+      "name": "Helpers",
+      "description": "Utility endpoints such as health checks and other supporting operations for the API."
+    }
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": [
+          "Helpers"
+        ],
+        "summary": "Health check",
+        "responses": {
+          "200": {
+            "description": "Service is healthy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "version": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/reverse/{ip}": {
+      "get": {
+        "tags": [
+          "Reverse"
+        ],
+        "summary": "Reverse DNS lookup",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ip",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "8.8.8.8"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "PTR records",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ip": {
+                      "type": "string"
+                    },
+                    "records": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string"
+                          },
+                          "value": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/{type}/{domain}": {
+      "get": {
+        "tags": [
+          "DNS"
+        ],
+        "summary": "DNS record lookup",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "type",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "A",
+                "AAAA",
+                "MX",
+                "TXT",
+                "NS",
+                "CNAME",
+                "SOA",
+                "SRV",
+                "PTR",
+                "NAPTR",
+                "HINFO",
+                "SPF",
+                "ANY"
+              ]
+            }
+          },
+          {
+            "in": "path",
+            "name": "domain",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "google.com"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "DNS records",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "domain": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "records": {
+                      "type": "array",
+                      "items": {
+                        "oneOf": [
+                          {
+                            "$ref": "#/components/schemas/ARecord"
+                          },
+                          {
+                            "$ref": "#/components/schemas/AAAARecord"
+                          },
+                          {
+                            "$ref": "#/components/schemas/MXRecord"
+                          },
+                          {
+                            "$ref": "#/components/schemas/TXTRecord"
+                          },
+                          {
+                            "$ref": "#/components/schemas/NSRecord"
+                          },
+                          {
+                            "$ref": "#/components/schemas/CNAMERecord"
+                          },
+                          {
+                            "$ref": "#/components/schemas/SOARecord"
+                          },
+                          {
+                            "$ref": "#/components/schemas/SRVRecord"
+                          },
+                          {
+                            "$ref": "#/components/schemas/PTRRecord"
+                          },
+                          {
+                            "$ref": "#/components/schemas/NAPTRRecord"
+                          },
+                          {
+                            "$ref": "#/components/schemas/HINFORecord"
+                          },
+                          {
+                            "$ref": "#/components/schemas/SPFRecord"
+                          },
+                          {
+                            "$ref": "#/components/schemas/ANYRecord"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ARecord": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        }
+      },
+      "AAAARecord": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        }
+      },
+      "MXRecord": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "exchange": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "integer"
+          }
+        }
+      },
+      "TXTRecord": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        }
+      },
+      "NSRecord": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        }
+      },
+      "CNAMERecord": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        }
+      },
+      "SOARecord": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "nsname": {
+            "type": "string"
+          },
+          "hostmaster": {
+            "type": "string"
+          },
+          "serial": {
+            "type": "integer"
+          },
+          "refresh": {
+            "type": "integer"
+          },
+          "retry": {
+            "type": "integer"
+          },
+          "expire": {
+            "type": "integer"
+          },
+          "minttl": {
+            "type": "integer"
+          }
+        }
+      },
+      "SRVRecord": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "port": {
+            "type": "integer"
+          },
+          "priority": {
+            "type": "integer"
+          },
+          "weight": {
+            "type": "integer"
+          }
+        }
+      },
+      "PTRRecord": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        }
+      },
+      "NAPTRRecord": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "order": {
+            "type": "integer"
+          },
+          "preference": {
+            "type": "integer"
+          },
+          "flags": {
+            "type": "string"
+          },
+          "service": {
+            "type": "string"
+          },
+          "regexp": {
+            "type": "string"
+          },
+          "replacement": {
+            "type": "string"
+          }
+        }
+      },
+      "HINFORecord": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "cpu": {
+            "type": "string"
+          },
+          "os": {
+            "type": "string"
+          }
+        }
+      },
+      "SPFRecord": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        }
+      },
+      "ANYRecord": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

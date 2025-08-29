@@ -1,0 +1,25 @@
+{
+  "name": "etrukavina-dns",
+  "version": "1.0.0",
+  "description": "A lightweight, fast, and reliable REST API for performing DNS lookups.",
+  "main": "kernel.js",
+  "scripts": {
+    "start": "node kernel.js",
+    "dev": "nodemon kernel.js",
+    "lint": "eslint .",
+    "test": "jest --runInBand"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.0.1",
+    "helmet": "^8.1.0",
+    "node-cache": "^5.1.2"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "jest": "^29.7.0",
+    "nodemon": "^3.0.2",
+    "supertest": "^7.1.1"
+  }
+}
